@@ -1,0 +1,35 @@
+---
+- name: Create user login
+  hosts: unix:children
+
+  tasks:
+  - name: Create user on ubuntu, debian, etc
+    user:
+      name: "{{ login_user }}"
+      password: "{{ login_pass | password_hash('sha512') }}"
+      generate_ssh_key: yes
+      ssh_key_type: rsa
+      ssh_key_bits: 4096
+      force: no
+      groups:
+	- sudo
+      state: present
+      shell: /bin/bash
+      createhome: yes
+    when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+  - name: Create user on centos
+    user:
+      name: "{{ login_user }}"
+      password: "{{ login_pass | password_hash('sha512') }}"
+      generate_ssh_key: yes
+      ssh_key_type: rsa
+      ssh_key_bits: 4096
+      force: no
+      groups:
+	- wheel
+      state: present
+      shell: /bin/bash
+      createhome: yes    
+    when: ansible_distribution == 'CentOS'
+
