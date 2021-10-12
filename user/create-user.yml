@@ -1,6 +1,6 @@
 ---
 - name: Create user login
-  hosts: unix:children
+  hosts: unix
 
   tasks:
   - name: Create user on ubuntu, debian, etc
