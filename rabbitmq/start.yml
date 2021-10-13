@@ -1,0 +1,16 @@
+---
+- name: Start RabbitMQ service on CentOS machine
+  hosts: rabbitmq
+
+  tasks:
+
+  - name: Enable RabbitMQ service
+    systemd:
+      name: rabbitmq-server.service
+      state: started
+      enabled: yes
+
+  - name: Make sure RabbitMQ service is up
+    systemd:
+      name: rabbitmq-server.service
+      state: started

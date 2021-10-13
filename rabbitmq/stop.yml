@@ -1,0 +1,10 @@
+---
+- name: Stop RabbitMQ service on CentOS machine
+  hosts: rabbitmq
+
+  tasks:
+
+  - name: Stop RabbitMQ service
+    systemd:
+      name: rabbitmq-server.service
+      state: stopped
