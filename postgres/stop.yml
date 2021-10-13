@@ -1,0 +1,10 @@
+---
+- name: Stop Postgres service on CentOS machine
+  hosts: postgres
+
+  tasks:
+
+  - name: Make sure postgres service is down
+    systemd:
+      name: postgresql
+      state: stopped

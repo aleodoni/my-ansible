@@ -1,0 +1,16 @@
+---
+- name: Start Postgres service on CentOS machine
+  hosts: postgres
+
+  tasks:
+
+  - name: Enable postgres service
+    systemd:
+      name: postgresql
+      state: started
+      enabled: yes
+
+  - name: Make sure postgres service is up
+    systemd:
+      name: postgresql
+      state: started

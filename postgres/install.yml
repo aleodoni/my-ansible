@@ -1,0 +1,20 @@
+---
+- name: Install PostgreSQL on CentOS
+  hosts: postgres
+
+  tasks:
+
+  - name: Install PostgreSQL
+    yum:
+      name: postgresql-server
+      state: latest
+
+  - name: Create a new PostgreSQL cluster
+    command:
+      postgresql-setup --initdb
+
+  - name: Start PostgreSQL service
+    systemd:
+      name: postgresql
+      state: started
+      enabled: yes
