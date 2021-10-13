@@ -1,0 +1,47 @@
+---
+- name: Install Rabbit MQ on CentOS machine
+  hosts: rabbitmq
+
+  tasks:
+  - name: Update yum
+    yum: 
+      name: '*'
+      state: latest
+
+  - name: Install EPEL
+    yum: 
+      name: epel-release
+      state: latest
+  
+  - name: Copy rabbitmq.repo
+    copy:
+      src: ./config/rabbitmq.repo
+      dest: /etc/yum.repos.d/rabbitmq.repo
+      owner: root
+      group: root
+
+  - name: Update yum package metadata
+    command: yum -q makecache -y --disablerepo='*' --enablerepo='rabbitmq_erlang-noarch' --enablerepo='rabbitmq_server-noarch'
+    args:
+      warn: false
+
+  - name: Install socat    
+    yum:
+      name: socat
+      state: latest
+
+  - name: Install logrotate
+    yum:
+      name: logrotate
+      state: latest
+
+  - name: Install RabbitMQ and zero dependency Erlang from repositories
+    command: yum install --repo rabbitmq_erlang --repo rabbitmq_server-noarch erlang rabbitmq-server
+    args:
+      warn: false
+
+  - name: Enable RabbitMQ service
+    systemd:
+      name: rabbitmq-server.service
+      state: started
+      enabled: yes
