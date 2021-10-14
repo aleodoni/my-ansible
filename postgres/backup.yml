@@ -1,0 +1,28 @@
+---
+- name: Backup PostgreSQL
+  hosts: postgres
+
+  vars_files:
+    - vars.yml
+
+  tasks:
+
+  - name: Set timestamp for backup
+    set_fact:
+      now: "{{ lookup('pipe', 'date +%F-%T') }}"
+
+  - name: Backup databases
+    postgresql_db:
+      name: "{{ item }}"
+      state: dump
+      target: "/tmp/{{ now }}-{{ item }}.dump.gz"
+      login_user: "{{ pg_user }}"
+      login_password: "{{ pg_pass }}"
+    loop: "{{ databases }}"
+ 
+  - name: Fetch backups from server
+    fetch:
+      src: "/tmp/{{ now }}-{{ item }}.dump.gz"
+      dest: "backups/{{ now }}-{{ item }}.dump.gz"
+      flat: yes
+    loop: "{{ databases }}"
